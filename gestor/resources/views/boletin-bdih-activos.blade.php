@@ -5,7 +5,7 @@
 @stop
 @section('content')
     <div class="row">
-        <div class="col-6">
+        <div class="col-4 offset-2">
             <div id="form" class="col-12"></div>
         </div>
         <div class="col-6">
@@ -299,13 +299,15 @@
 
     $("#load").click(function(e) {
         item = 1;
+        focusDiv = null;
         $("#form").html('');
+        var date = new Date().toJSON();
         $.getJSON( "{{ route('boletines.bdih-activos.saves') }}?load="+$("#loadfile").val(), function( data ) {
             $.each( data, function( key, val ) {
+                var currentitem = item;
                 $("#new"+val.type).click();
                 if(val.value) {
-                    var $currentitem = item - 1;
-                    $("#item-"+$currentitem+" input, #item-"+$currentitem+" select, #item-"+$currentitem+" textarea").each(function(index) {
+                    $("#item-"+currentitem+" input, #item-"+currentitem+" select, #item-"+currentitem+" textarea").each(function(index) {
                         $(this).val(val.value[index]);
                     });
                 }

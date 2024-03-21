@@ -8,7 +8,7 @@ return [
     'edit' => 'Editar',
     'delete' => 'Borrar',
     'panel_de_gestion' => 'Panel de gestión',
-    'boletin_basquetrade' => 'Boletín EEN Basquetrade',
+    'boletin_basquetrade' => 'Boletín EEN Oportunidades Comerciales',
     'boletin_bdih_activos' => 'Boletín BDIH Activos tecnológicos',
     'info_campanas' => 'Información Campañas',
     'newsletters' => 'Boletines',
