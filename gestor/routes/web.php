@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Message;
 use App\Http\Controllers\LanguageController;
 
 /*
@@ -24,6 +25,16 @@ Route::group(['middleware' => 'auth'], function() {
     })->name('home');
 
     //Paneles de información
+    Route::get('/info/view/{id}', function ($id) {
+
+        $message = Message::where('campaign_id', $id)->first();
+        $message['text'] = str_replace(["</html>", "</body>"], "", $message['text']);
+
+        return view('info-campana-view', 
+            ['message' => $message]
+        );
+    })->name('info.campanas.view');
+
     Route::get('/info', function () {
         return view('info-campanas');
     })->name('info.campanas');

@@ -62,9 +62,9 @@ jQuery(document).ready(function() {
 function generateTable(json) {
   json.forEach(function(data, index) {
     jQuery("table tbody").append("<tr>"+
-      "<td><a href='./view.php?id="+data.id+(data.type == 'split' ? "&showtestab=yes" : "")+"' target='_blank'>"+data.name+"</a>"+
+      "<td><a href='{{ route('info.campanas') }}/view/"+data.id+(data.type == 'split' ? "&showtestab=yes" : "")+"' target='_blank'>"+data.name+"</a>"+
         (data.segment_name != '' ? "<br/><span style='font-size: 10px;'>"+data.segment_name+"</span>" : "")+
-        (data.type == 'split' ? "<br/><span style='font-size: 12px; font-weight: bold;'><a href='./view.php?id="+data.id+(data.type == 'split' ? "&showtestab=yes&testab=yes" : "")+"' target='_blank'>TEST B</a> | <a href='./compare.php?campaign_id="+data.id+"' target='_blank'>COMPARAR</a></span>" : "")+
+        (data.type == 'split' ? "<br/><span style='font-size: 12px; font-weight: bold;'><a href='{{ route('info.campanas') }}/view/"+data.id+(data.type == 'split' ? "&showtestab=yes&testab=yes" : "")+"' target='_blank'>TEST B</a> | <a href='./compare.php?campaign_id="+data.id+"' target='_blank'>COMPARAR</a></span>" : "")+
       "<div class='image'><img src='"+data.image+"' /></div></td>"+
       "<td>"+data.date+"</td>"+
       "<td>"+data.subject+"</td>"+

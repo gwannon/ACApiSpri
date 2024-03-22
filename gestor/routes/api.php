@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
+use App\Models\Message;
 use Gwannon\PHPActiveCampaignAPI\curlAC;
 
 define('AC_API_DOMAIN', env('AC_API_DOMAIN', 'null')); //URL de la API de Active Campaign
@@ -292,21 +293,92 @@ Route::post('/boletines/bdih-activos/ajax/', function (Request $request) {
     return $json;
 })->name('boletines.bdih-activos.ajax.post');
 
+Route::get('/info/view/ajax', function (Request $request) {
+    $exclude_urls = [
+        "https://www.spri.eus/es/",
+        "https://www.spri.eus/",
+        "https://www.youtube.com/user/grupoSPRI",
+        "https://www.linkedin.com/company/grupospri",
+        "https://twitter.com/grupospri",
+        "https://www.spri.eus/es/rss-2/",
+        "https://www.spri.eus/es/personaliza-tus-boletines/",
+        "https://www.spri.eus/es/preferencias-de-tus-suscripciones/?wpatg_tab=login",
+        "https://www.spri.eus/es/preferencias-de-tus-suscripciones/?wpatg_tab=register",
+        "https://www.spri.eus/es/preferencias-de-tus-suscripciones/?wpatg_tab=login",
+        "https://www.spri.eus/es/preferencias-de-tus-suscripciones/?wpatg_tab=register",
+        "https://www.spri.eus/es/boletines/",
+        "https://www.spri.eus/es/aviso-legal-2/",
+        "https://www.spri.eus/es/aviso-legal/",
+        "https://www.spri.eus/pertsonalizatu-zure-buletinak/",
+        "https://www.spri.eus/buletinak/",
+        "https://www.spri.eus/lege-oharra/",
+        "https://www.eenbasque.net/"
+    ];
+
+    $items = array();
+    $campaign = curlAC::curlCall("/campaigns/".$request->campaign_id)->campaign;
+    $items['uniquelinkclicks'] = intval($campaign->uniquelinkclicks);
+    $items['linkclicks'] = intval($campaign->linkclicks);
+    $links = curlAC::curlCall("/campaigns/".$request->campaign_id."/links")->links;
+
+    //Quitamos del número de clicks los excluidos
+    foreach ($links as $link) { 
+        if (filter_var($link->link, FILTER_VALIDATE_URL) && in_array($link->link, $exclude_urls)) {
+            $items['uniquelinkclicks'] = $items['uniquelinkclicks'] - intval($link->uniquelinkclicks);
+            $items['linkclicks'] = $items['linkclicks'] - intval($link->linkclicks);
+        }
+    }
+    foreach ($links as $link) { 
+        if (filter_var($link->link, FILTER_VALIDATE_URL) && !in_array($link->link, $exclude_urls)) {
+            //print_r ($link);
+            $items['links'][] = [
+                "link" => $link->link,
+                "uniquelinkclicks" => intval($link->uniquelinkclicks),
+                "uniquelinkclickspercent" => round(((intval($link->uniquelinkclicks) / $items['uniquelinkclicks']) * 100), 2),
+                "linkclicks" => (intval($link->linkclicks) != "" ? intval($link->linkclicks) : 0), 
+                "linkclickspercent" => round(((intval($link->linkclicks) / $items['linkclicks']) * 100), 2),
+            ];
+        }
+    }
+    if (count($items['links']) == 0) return false;
+    return $items;
+})->name('info-view.ajax');
 
 Route::get('/info/ajax/', function (Request $request) {
     $items = [];
     $offset = 0;
-
-    $campaigns = curlAC::curlCall("/campaigns?orders[sdate]=DESC&offset=".$offset."&limit=20")->campaigns;
-  
+    $campaigns = curlAC::curlCall("/campaigns?orders[sdate]=DESC&offset=".$request->offset."&limit=".env('AC_API_LIMIT', 20))->campaigns;
     foreach ($campaigns as $campaign) { 
-        $messages = curlAC::curlCall(str_replace(AC_API_DOMAIN, "", $campaign->links->campaignMessages))->campaignMessages;
+        $messages = Message::where('campaign_id', $campaign->id)->get();
+        if(sizeof($messages) == 0){
+            $messages = curlAC::curlCall(str_replace(AC_API_DOMAIN, "", $campaign->links->campaignMessages))->campaignMessages;
+            //print_r($messages); die;
+            $subject = $messages[0]->subject;
+            $html = curlAC::curlCall(str_replace(AC_API_DOMAIN, "", $messages[0]->links->message)); //Conseguimos el texto de la campaña
+            $image = $messages[0]->screenshot;
+            //Guardamos en base de datos
+            $newmessage = new Message;
+            $newmessage->campaign_id = $campaign->id;
+            $newmessage->title = $subject;
+            $newmessage->titleab = '';
+            $newmessage->text = $html->message->html;
+            $newmessage->textab = '';
+            $newmessage->image = $image;
+            $newmessage->save();
+
+        } else {
+            $subject = $messages[0]->title;
+            $html = $messages[0]->text;
+            $image = $messages[0]->image;
+            //return array("title" => $row['title'], "titleab" => $row['titleab'],"image" => $row['image'], "text" => $row['text'], "textab" => $row['textab']);
+        }
+
         $items[] = [
             "id" => $campaign->id,
             "type" => $campaign->type,
             "date" => date("Y-m-d H:i", strtotime($campaign->sdate)),
             "name" => $campaign->name,
-            "subject" => $messages[0]->subject,
+            "subject" => $subject,
             "send_amt" => $campaign->send_amt,
             "uniqueopens" => $campaign->uniqueopens,
             "uniqueopens_percent" => number_format(($campaign->uniqueopens > 0 && $campaign->send_amt > 0 ? round(($campaign->uniqueopens / $campaign->send_amt * 100), 2) : 0), 2, ",", "."),
@@ -315,29 +387,10 @@ Route::get('/info/ajax/', function (Request $request) {
             "uniquelinkclicks_percent" => number_format(($campaign->uniquelinkclicks > 0 && $campaign->send_amt > 0 ? round(($campaign->uniquelinkclicks / $campaign->send_amt * 100), 2) : 0), 2, ",", "."),
             "linkclicks" => $campaign->linkclicks,
             "unsubscribes" => $campaign->unsubscribes,
-            "image" => $messages[0]->screenshot,
+            "image" => $image,
             "segment_name" => $campaign->segmentname
           ];
-        
-          if($campaign->type == 'split') {
-            foreach(curlAC::curlCall(str_replace(AC_API_DOMAIN, "", $campaign->links->campaignMessages))->campaignMessages as $key => $test) {
-              $json['testab'][$key] = [
-                "send_amt" => $test->send_amt,
-                "uniqueopens" => $test->uniqueopens,
-                "uniqueopens_percent" => number_format(($test->uniqueopens > 0 && $test->send_amt > 0 ? round(($test->uniqueopens / $test->send_amt * 100), 2) : 0), 2, ",", "."),
-                "opens" => $test->opens,
-                "uniquelinkclicks" => $test->uniquelinkclicks,
-                "uniquelinkclicks_percent" => number_format(($test->uniquelinkclicks > 0 && $test->send_amt > 0 ? round(($test->uniquelinkclicks / $test->send_amt * 100), 2) : 0), 2, ",", "."),
-                "linkclicks" => $test->linkclicks,
-                "unsubscribes" => $test->unsubscribes,
-              ];       
-            }
-          }
-
-
-
     }
     if (count($items) == 0) return [];
-
     return $items;
 })->name('info.ajax');
