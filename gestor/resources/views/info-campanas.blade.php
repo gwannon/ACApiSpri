@@ -1,7 +1,7 @@
 @extends('layouts.app')
-@section('title', 'Gestor SPRI - Informaciṕon campañas')
+@section('title', 'Gestor SPRI - Información campañas')
 @section('maintitle')
-    <h1>{!! trans('messages.info-camapanas') !!}</h2>
+    <h1>{!! trans('messages.info_campanas') !!}</h2>
 @stop
 @section('content')
   <div class="row">

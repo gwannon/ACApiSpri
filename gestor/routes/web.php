@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Message;
 use App\Http\Controllers\LanguageController;
+use Gwannon\PHPActiveCampaignAPI\curlAC;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,6 +35,83 @@ Route::group(['middleware' => 'auth'], function() {
             ['message' => $message]
         );
     })->name('info.campanas.view');
+
+    Route::get('/info/tags', function () {
+        $tags = [
+            "Engagement" => [
+                "169", //engagement3m
+                "170", //engagement6m
+                "171", //disengaged
+                "172", //inactive
+            ], 
+            /*"Basque Open Industry" => [
+                "383", //inscrito-boi
+                "386", //novedades-boi
+                "381", //newsletter-boi
+            ], */
+            "Intereses" => [
+                "98", //interes-ciberseguridad
+                "101", //interes-digitalizacion
+                "96", //interes-emprendimiento
+                "105", //interes-financiacion
+                "102", //interes-i+d
+                "107", //interes-infraestructuras
+                "97", //interes-innovacion
+                "103", //interes-internacionalizacion
+                "104", //interes-invertir-en-euskadi
+                "106", //interes-sostenibilidad-ambiental
+                "182", //Interes-todos
+            ],
+            "Boletines" => [
+                "19", //newsletter-grupospri
+                "323", //newsletter-grupospri-empresa
+                "283", //newsletter-empresadigitala
+                "21", //newsletter-adiagenda
+                "20", //newsletter-upeuskadi
+                "80", //newsletter-been
+                "394", //newsletter-bdih
+                "444", //newsletter-been-comercial
+            ],
+            /*"Intereses Boletines" => [
+                "312", //interes-newsletter-ciberseguridad
+                "313", //interes-newsletter-digitalizacion
+                "314", //interes-newsletter-emprendimiento
+                "315", //interes-newsletter-financiacion
+                "316", //interes-newsletter-i+d
+                "317", //interes-newsletter-infraestructuras
+                "318", //interes-newsletter-innovacion
+                "319", //interes-newsletter-internacionalizacion
+                "320", //interes-newsletter-invertir-en-euskadi
+                "321", //interes-newsletter-sostenibilidad-medioambiental
+                "322" //interes-newsletter-todos
+            ], */	
+            "Notificaciones" => [
+                "282", //notificar-ayudas
+                "281", //notificar-documentacion
+                "280", //notificar-eventos
+            ],
+            "Idiomas" => [
+                "18", //newsletter-es
+                "30", //newsletter-eu
+            ],
+        ];
+
+        $data = [];
+        foreach ($tags as $label => $tag_ids) {
+            foreach ($tag_ids as $tag_id) {
+                $tag = curlAC::curlCall("/tags/".$tag_id)->tag; 
+                $data[$label][$tag_id] = [
+                    "tag" => $tag->tag,
+                    "susbcribers" => $tag->subscriber_count,
+                    "date" => date("Y-m-d H:i:s", strtotime($tag->updated_timestamp))     
+                ];
+            }
+        }
+        /*echo "<pre>";
+        print_r($data);
+        echo "</pre>";*/
+        return view('info-tags', ["data" => $data]);
+    })->name('info.tags');
 
     Route::get('/info', function () {
         return view('info-campanas');

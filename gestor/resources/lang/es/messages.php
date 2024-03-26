@@ -11,6 +11,7 @@ return [
     'boletin_basquetrade' => 'Boletín EEN Oportunidades Comerciales',
     'boletin_bdih_activos' => 'Boletín BDIH Activos tecnológicos',
     'info_campanas' => 'Información Campañas',
+    'info_tags' => 'Información Etiquetado',
     'newsletters' => 'Boletines',
     'info' => 'Información AC',
     'admin' => 'Administración',
@@ -64,6 +65,4 @@ return [
     'otherpanels2' => 'Informes data studio',
     'otherpanels3' => 'Calendario editorial Grupo SPRI',
     'otherpanels4' => 'Seguimiento tareas',
-
-    'info-camapanas' => 'Información campañas'
 ];

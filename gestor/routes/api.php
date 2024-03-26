@@ -156,7 +156,7 @@ Route::get('/boletines/bdih-activos/items/', function (Request $request) {
     }
 
     $items = json_decode(file_get_contents("https://www.spri.eus/ejson/casos-uso/?lang=".$lang.
-    "&per_page=100"));
+    "&per_page=100&token=".env('WP_SPRI_API_TOKEN', 'null')));
     foreach ($items as $item) {
         list($dia, $mes, $ano) = explode("/", $item->fecha_caso);
         $json[] = [
