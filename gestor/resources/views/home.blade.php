@@ -19,6 +19,8 @@
             @if (preg_match('/info-campanas/', Auth::user()->perms))
                 <a href="{{ route('info.campanas') }}" class="btn btn-primary mb-3">{!! trans('messages.info_campanas') !!}</a>
                 <a href="{{ route('info.tags') }}" class="btn btn-primary mb-3">{!! trans('messages.info_tags') !!}</a>
+                <a href="{{ route('info.leadscorings', 'intereses') }}" class="btn btn-primary mb-3">{!! trans('messages.info_leadscorings_intereses') !!}</a>
+                <a href="{{ route('info.leadscorings', 'ayudas') }}" class="btn btn-primary mb-3">{!! trans('messages.info_leadscorings_ayudas') !!}</a>
             @endif
         </div>
         <div class="col-md-4 form-group mb-3">

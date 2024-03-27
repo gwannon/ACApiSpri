@@ -12,6 +12,11 @@ return [
     'boletin_bdih_activos' => 'Boletín BDIH Activos tecnológicos',
     'info_campanas' => 'Información Campañas',
     'info_tags' => 'Información Etiquetado',
+    'info_leadscorings_intereses' => 'Información Leadscorings Intereses',
+    'info_leadscorings_ayudas' => 'Información Leadscorings Ayudas',
+    
+
+
     'newsletters' => 'Boletines',
     'info' => 'Información AC',
     'admin' => 'Administración',

@@ -113,6 +113,97 @@ Route::group(['middleware' => 'auth'], function() {
         return view('info-tags', ["data" => $data]);
     })->name('info.tags');
 
+    Route::get('/info/leadscorings/{type}', function ($type) {
+
+
+        $segments = [
+            "intereses" => [
+                "583" => "Ciberseguridad",
+                "596" => "Digitalización", 
+                "589" => "Emprendimiento",
+                "590" => "Financiación",
+                "591" => "I+D",
+                "592" => "Infraestructuras",
+                "581" => "Innovación",
+                "594" => "Internacionalización",
+                "593" => "Invest In Basque Country",
+                "595" => "Sostenibilidad medioambiental"
+            ], 
+            "ayudas" => [
+                "1264" => "5G empresarial",
+                "853" => "Aholku",
+                "729" => "Atracción de proveedores estratégicos",
+                "788" => "Aurrera",
+                "1037" => "Azpitek",
+                "1590" => "Banda Ancha Ultrarrápida",
+                "976" => "Barnekintzaile",
+                "1313" => "Barnetegi Teknologiko",
+                "645" => "Baskeep",
+                "973" => "Basque Fondo",
+                "1372" => "Basque Tek Ventures",
+                "1036" => "Bateratu",
+                "685" => "BDIH + Deep Dives BDIH",
+                "1312" => "BDIH Konexio",
+                "778" => "Becas Beint",
+                "1583" => "Becas Global Training", 
+                "686" => "BEEN",
+                "1091" => "Bideratu Berria",
+                "1125" => "Bilakatu",
+                "696" => "BIND 4.0",
+                "697" => "BIND 4.0 SME Connection",
+                "1608" => "BOI (Menos inscritos)",
+                "866" => "Bultzatu",
+                "1586" => "Certificaciones BAIT / IT Txartela",
+                "734" => "Ciberseguridad Industrial",
+                "1052" => "Competencias Digitales Profesionales",
+                "975" => "Ekintzaile",
+                "880" => "Elkartek",
+                "1070" => "Elkartu",
+                "1035" => "Emaitek Plus",
+                "1588" => "Energías más limpias",
+                "1288" => "Enpresa Digitala",
+                "834" => "Gauzatu Industria",
+                "1221" => "Gauzatu Internacional",
+                "715" => "Hablamos de tí",
+                "653" => "Hazinnova",
+                "879" => "Hazitek",
+                "1592" => "Impulsando El Euskera",
+                "898" => "Indartu",
+                "1371" => "Industria Digitala",
+                "1276" => "Industria Inteligente",
+                "597" => "Innobideak Innokonexio",
+                "1388" => "Innobideak Prestakuntza",
+                "1582" => "Inteligencia Artificial Aplicada",
+                "1415" => "Inteligencia Competitiva",
+                "958" => "Invest in the Basque Country",
+                "1581" => "Kloud",
+                "1110" => "Lortu",
+                "1077" => "Mikroenpresa digitala",
+                "765" => "Mujeres en la industria",
+                "1158" => "Net-Zero",
+                "870" => "Pilotu",
+                "1160" => "Renove Industria 4.0",
+                "1106" => "Sakondu",
+                "1591" => "Servicio de Emisión de Informes Técnicos de Calificación a Efectos Fiscales",
+                "1589" => "Servicios de apoyo a la internacionalización",
+                "1347" => "Smart Industry",
+                "974" => "UP Euskadi",
+                "1109" => "Zabaldu",
+            ], 
+        ];
+
+        $data = [];
+
+        foreach ($segments[$type] as $segment_id => $segment_name) {
+            $segment = curlAC::curlCall("/contacts?segmentid=".$segment_id); 
+            $data[$segment_id] = [
+                "name" => $segment_name,
+                "susbcribers" => $segment->meta->total, 
+            ];
+        }
+        return view('info-leadscorings', ["data" => $data, "type" => $type]);
+    })->name('info.leadscorings');
+
     Route::get('/info', function () {
         return view('info-campanas');
     })->name('info.campanas');
