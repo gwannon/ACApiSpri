@@ -36,6 +36,120 @@ Route::group(['middleware' => 'auth'], function() {
         );
     })->name('info.campanas.view');
 
+    Route::get('/info/automatizaciones', function () {
+        $automs = [
+            /*"Innobideak" => [
+                "170" => 5,
+                "169" => 10 
+            ], */
+            "Ciberseguridad" => [
+                "108" => 0,
+                "109" => 5,
+                "110" => 10,
+                "111" => 50,
+                "107" => 100,
+                "106" => 0
+            ], 
+            "Digitalización" => [
+                "115" => 0,
+                "116" => 5,
+                "117" => 10,
+                "118" => 50,
+                "114" => 100,
+                "113" => 0
+            ], 
+            "Emprendimiento" => [
+                "121" => 0,
+                "122" => 5,
+                "123" => 10,
+                "124" => 50,
+                "120" => 100,
+                "119" => 0
+            ], 
+            "Financiación" => [
+                "127" => 0,
+                "128" => 5,
+                "129" => 10,
+                "130" => 50,
+                "126" => 100,
+                "125" => 0
+            ], 
+            "Interés I+D" => [
+                "133" => 0,
+                "134" => 5,
+                "135" => 10,
+                "136" => 50,
+                "132" => 100,
+                "131" => 0
+            ], 
+            "Interés Infraestructuras" => [
+                "139" => 0,
+                "140" => 5,
+                "141" => 10,
+                "142" => 50,
+                "138" => 100,
+                "137" => 0
+            ], 
+            "Innovación" => [
+                "145" => 0,
+                "146" => 5,
+                "147" => 10,
+                "148" => 50,
+                "144" => 100,
+                "143" => 0
+            ], 
+            "Internacionalización" => [
+                "151" => 0,
+                "152" => 5,
+                "153" => 10,
+                "154" => 50,
+                "150" => 100,
+                "149" => 0
+            ], 
+            "Invest in Basque Country" => [
+                "157" => 0,
+                "158" => 5,
+                "159" => 10,
+                "160" => 50,
+                "156" => 100,
+                "155" => 0
+            ], 
+            "Interés Sostenibilidad Medioambiental" => [
+                "163" => 0,
+                "164" => 5,
+                "165" => 10,
+                "166" => 50,
+                "162" => 100,
+                "161" => 0
+            ],
+        ];
+
+        $automs_api = curlAC::curlCall("/automations?offset=0&limit=100")->automations; 
+
+        $data = [];
+        foreach ($automs as $label => $autom_ids) {
+            $total_puntos = 0;
+            $total_ejecuciones = 0;
+            foreach ($autom_ids as $autom_id => $value) {
+										
+                foreach ($automs_api as $autom_api) {
+                    if($autom_api->id == $autom_id) { 
+                        $current_autom = $autom_api;
+                        break;
+                    }
+                } 
+                $total_ejecuciones = $total_ejecuciones + $current_autom->exited;
+                $total_puntos = $total_puntos + ($current_autom->exited * $value);
+                $data[$label][$current_autom->id] = [
+                    "name" => $current_autom->name,
+                    "exited" => $current_autom->exited,
+                    "total" => $current_autom->exited*$value
+                ];
+            }
+        }
+        return view('info-automatizaciones', ["data" => $data, "total_ejecuciones" => $total_ejecuciones, "total_puntos" => $total_puntos]);
+    })->name('info.automatizaciones');
+
     Route::get('/info/tags', function () {
         $tags = [
             "Engagement" => [
@@ -107,9 +221,6 @@ Route::group(['middleware' => 'auth'], function() {
                 ];
             }
         }
-        /*echo "<pre>";
-        print_r($data);
-        echo "</pre>";*/
         return view('info-tags', ["data" => $data]);
     })->name('info.tags');
 
