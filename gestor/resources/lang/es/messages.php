@@ -12,6 +12,8 @@ return [
     'boletin_bdih_activos' => 'Boletín BDIH Activos tecnológicos',
     'info_campanas' => 'Información Campañas',
     'info_tags' => 'Información Etiquetado',
+    'otros_paneles' => 'Otros paneles',
+    'boletines_grupo_spri' => 'Boletines Grupo SPRI',
     'info_leadscorings_intereses' => 'Información Leadscorings Intereses',
     'info_leadscorings_ayudas' => 'Información Leadscorings Ayudas',
     'info_usuarios_nuevos' => 'Información usuarios nuevos',

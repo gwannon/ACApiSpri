@@ -83,10 +83,6 @@ Route::group(['middleware' => 'auth'], function() {
 
     Route::get('/info/apuntados-boletines', function () {
         $data = [];
-
-
-
-
         $tags = [
             "newsletter-grupospri" => "Grupo SPRI (Lunes)",
             "newsletter-grupospri-empresa" => "Grupo SPRI Empresas (Martes)",
@@ -113,15 +109,6 @@ Route::group(['middleware' => 'auth'], function() {
         }
         $response = curlAC::curlCall("/contacts?listid=17&status=1&segmentid=1743");
         $total = $response->meta->total;
-
-
-
-
-
-
-
-
-
         return view('info-apuntados-boletines', ["data" => $data, "total" => $total]);
     })->name('info.apuntados-boletines');
 
