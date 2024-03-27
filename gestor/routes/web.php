@@ -36,6 +36,95 @@ Route::group(['middleware' => 'auth'], function() {
         );
     })->name('info.campanas.view');
 
+    Route::get('/info/registrados-ultimo-mes', function () {
+        $data = [];
+        $date = date("Y-m-d", strtotime("1 month ago"));
+        $tagIDs = [];
+        $response = curlAC::curlCall("/tags?limit=100&search=via-");
+        foreach($response->tags as $tag) {
+            $tagIDs[$tag->id] = $tag->tag;
+        }
+        $response = curlAC::curlCall("/tags?limit=100&search=DOC-");
+        foreach($response->tags as $tag) {
+            $tagIDs[$tag->id] = $tag->tag;
+        }
+        $limit = 100;
+        $offset = 0;
+        $total = 0;
+        $counter = 1;
+        while (1 == 1) {
+            $response = curlAC::curlCall("/contacts?listid=17&status=1&orders[cdate]=DESC&filters[created_after]=".$date."&limit=".$limit."&offset=".$offset);
+            $offset = $offset + $limit;
+            if (!isset($response->contacts) || count($response->contacts) == 0) break;
+            foreach($response->contacts as $contact) {
+                $counter++;
+                $response_tags = curlAC::curlCall(str_replace(AC_API_DOMAIN, "", $contact->links->contactTags));
+                if(isset($response_tags->contactTags)) {
+                    foreach($response_tags->contactTags as $tag) {
+                        
+                        if(array_key_exists($tag->tag, $tagIDs)) {
+                            $total++;
+                            if(!isset($data[$tag->tag])) {
+                                $data[$tag->tag] = [
+                                    "name" => $tagIDs[$tag->tag],
+                                    "total" => 1
+                                ];
+                            } else {
+                                $data[$tag->tag]['total']++;
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        return view('info-registrados-ultimo-mes', ["data" => $data, "total" => $total]);
+    })->name('info.registrados-ultimo-mes');
+
+    Route::get('/info/apuntados-boletines', function () {
+        $data = [];
+
+
+
+
+        $tags = [
+            "newsletter-grupospri" => "Grupo SPRI (Lunes)",
+            "newsletter-grupospri-empresa" => "Grupo SPRI Empresas (Martes)",
+            "newsletter-been" => "BEEN comercial (Miercoles)",
+            "newsletter-adiagenda" => "ADI! (Jueves)",
+            "newsletter-empresadigitala" => "Mikroempresa Digitala (Viernes)",
+            "newsletter-upeuskadi" => "UPEuskadi (Mensual)",
+            "newsletter-bdih" => "BDIH Activos (Quincenal)",
+            "newsletter-been-comercial" => "BEEN técnico (Miercoles)",
+        ];
+        $tagIDs = [];
+        $response = curlAC::curlCall("/tags?limit=100&offset=0&search=newsletter-");
+        foreach($response->tags as $tag) {
+            if(array_key_exists($tag->tag, $tags)) {
+                $tagIDs[$tag->id] = $tag->tag;
+            }
+        }
+        foreach($tagIDs as $tagID => $tagLabel) {
+            $response = curlAC::curlCall("/contacts?listid=17&status=1&tagid=".$tagID);
+            $data[] = [ 
+                "name" =>$tags[$tagLabel],
+                "total" => $response->meta->total
+            ];
+        }
+        $response = curlAC::curlCall("/contacts?listid=17&status=1&segmentid=1743");
+        $total = $response->meta->total;
+
+
+
+
+
+
+
+
+
+        return view('info-apuntados-boletines', ["data" => $data, "total" => $total]);
+    })->name('info.apuntados-boletines');
+
     Route::get('/info/automatizaciones/todas', function () {
         $data = [];
         $offset = 0;

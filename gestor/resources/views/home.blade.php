@@ -22,11 +22,16 @@
                 <a href="{{ route('info.leadscorings', 'intereses') }}" class="btn btn-primary mb-3">{!! trans('messages.info_leadscorings_intereses') !!}</a>
                 <a href="{{ route('info.leadscorings', 'ayudas') }}" class="btn btn-primary mb-3">{!! trans('messages.info_leadscorings_ayudas') !!}</a>
                 <a href="{{ route('info.automatizaciones') }}" class="btn btn-primary mb-3">{!! trans('messages.info_automatizaciones') !!}</a>
-                <a href="{{ route('info.automatizaciones-todas') }}" class="btn btn-primary mb-3">{!! trans('messages.info_automatizaciones_todas') !!}</a>
                 <h4>{!! trans('messages.info_usuarios_nuevos') !!}</h4>
                 <a href="{{ route('info.usuarios', 7) }}" class="btn btn-primary mb-3">{!! trans('messages.7_days') !!}</a>
                 <a href="{{ route('info.usuarios', 30) }}" class="btn btn-primary mb-3">{!! trans('messages.30_days') !!}</a>
                 <a href="{{ route('info.usuarios', 90) }}" class="btn btn-primary mb-3">{!! trans('messages.90_days') !!}</a>
+            @endif
+            @if (preg_match('/info-adimedia/', Auth::user()->perms))
+                <h4>{!! trans('messages.info_adimedia') !!}</h4>
+                <a href="{{ route('info.automatizaciones-todas') }}" class="btn btn-primary mb-3">{!! trans('messages.info_automatizaciones_todas') !!}</a>
+                <a href="{{ route('info.apuntados-boletines') }}" class="btn btn-primary mb-3">{!! trans('messages.info_apuntados-boletines') !!}</a>
+                <a href="{{ route('info.registrados-ultimo-mes') }}" class="btn btn-primary mb-3">{!! trans('messages.info_registrados-ultimo-mes') !!}</a>
             @endif
         </div>
         <div class="col-md-4 form-group mb-3">
