@@ -36,6 +36,27 @@ Route::group(['middleware' => 'auth'], function() {
         );
     })->name('info.campanas.view');
 
+    Route::get('/info/automatizaciones/todas', function () {
+        $data = [];
+        $offset = 0;
+        $max = 100;
+        $automs_api = curlAC::curlCall("/automations?orders[name]=DESC&offset=".$offset."&limit=".$max)->automations; 
+        while(count($automs_api) > 0) { 
+            $offset = $offset + $max;
+            $automs_api = curlAC::curlCall("/automations?orders[name]=DESC&offset=".$offset."&limit=".$max)->automations; 
+            foreach ($automs_api as $current_autom) {
+                $data[$current_autom->id] = [
+                    "name" => $current_autom->name,
+                    "screenshot" => $current_autom->screenshot,
+                    "entered" => $current_autom->entered,
+                    "exited" => $current_autom->exited,
+                    "status" => $current_autom->status,
+                ];
+            } //if ($offset > 500) break;
+        }
+        return view('info-automatizaciones-todas', ["data" => $data]);
+    })->name('info.automatizaciones-todas');
+
     Route::get('/info/automatizaciones', function () {
         $automs = [
             /*"Innobideak" => [

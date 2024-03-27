@@ -16,6 +16,7 @@ return [
     'info_leadscorings_ayudas' => 'Información Leadscorings Ayudas',
     'info_usuarios_nuevos' => 'Información usuarios nuevos',
     'info_automatizaciones' =>  'Información Automatizaciones',
+    'info_automatizaciones_todas' =>  'Todas las Automatizaciones',
     '7_days' => '7 días',
     '30_days' => '30 días',
     '90_days' => '90 días',
