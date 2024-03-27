@@ -14,6 +14,10 @@ return [
     'info_tags' => 'Información Etiquetado',
     'info_leadscorings_intereses' => 'Información Leadscorings Intereses',
     'info_leadscorings_ayudas' => 'Información Leadscorings Ayudas',
+    'info_usuarios_nuevos' => 'Información usuarios nuevos',
+    '7_days' => '7 días',
+    '30_days' => '30 días',
+    '90_days' => '90 días',
     
 
 

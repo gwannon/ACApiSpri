@@ -21,6 +21,10 @@
                 <a href="{{ route('info.tags') }}" class="btn btn-primary mb-3">{!! trans('messages.info_tags') !!}</a>
                 <a href="{{ route('info.leadscorings', 'intereses') }}" class="btn btn-primary mb-3">{!! trans('messages.info_leadscorings_intereses') !!}</a>
                 <a href="{{ route('info.leadscorings', 'ayudas') }}" class="btn btn-primary mb-3">{!! trans('messages.info_leadscorings_ayudas') !!}</a>
+                <h4>{!! trans('messages.info_usuarios_nuevos') !!}</h4>
+                <a href="{{ route('info.usuarios', 7) }}" class="btn btn-primary mb-3">{!! trans('messages.7_days') !!}</a>
+                <a href="{{ route('info.usuarios', 30) }}" class="btn btn-primary mb-3">{!! trans('messages.30_days') !!}</a>
+                <a href="{{ route('info.usuarios', 90) }}" class="btn btn-primary mb-3">{!! trans('messages.90_days') !!}</a>
             @endif
         </div>
         <div class="col-md-4 form-group mb-3">

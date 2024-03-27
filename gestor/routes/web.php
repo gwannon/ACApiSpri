@@ -113,6 +113,22 @@ Route::group(['middleware' => 'auth'], function() {
         return view('info-tags', ["data" => $data]);
     })->name('info.tags');
 
+    Route::get('/info/usuarios/{days}', function ($days) {
+        $data = [];
+        $counter = 0;
+        while ($counter < $days) {
+            $enddate = date("Y-m-d", strtotime("-".$counter." days"));
+            $counter ++;
+            $startdate = date("Y-m-d", strtotime("-".$counter." days"));
+            $result = curlAC::curlCall("/contacts?filters[created_before]=".$enddate."&filters[created_after]=".$startdate)->meta->total;
+            $label = date("m/d", strtotime("-".$counter." days"));
+            $data[$label] =  $result;
+        }
+        $data = array_reverse($data);
+        return view('info-usuarios', ["data" => $data, "days" => $days]);
+    })->name('info.usuarios');
+
+
     Route::get('/info/leadscorings/{type}', function ($type) {
 
 
