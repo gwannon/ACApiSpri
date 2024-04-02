@@ -30,10 +30,10 @@
                     <label>
                         @if (preg_match('/'.$perm.'/', $user['perms']))
                         <input type="checkbox" class="permcheckboxes" id="inputPerms{{ $perm }}" name="userperms[]" 
-                            value="{{ $perm }}" checked="checked" required>
+                            value="{{ $perm }}" checked="checked">
                         @else
                         <input type="checkbox" class="permcheckboxes" id="inputPerms{{ $perm }}" name="userperms[]" 
-                            value="{{ $perm }}" required>
+                            value="{{ $perm }}">
                         @endif    
                         {!! trans('messages.perm_'.$perm) !!}
                     </label><br/>

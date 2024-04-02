@@ -49,7 +49,7 @@ return [
     'perms' => 'Permisos',
     'useredit' => 'Editar usuario',
     'emailexists' => 'El email ya existe',
-    'edituserok' => 'Usuario borrado correctamente',
+    'edituserok' => 'Usuario editado correctamente',
     'createuserok' => 'Usuario creado correctamente',
     'deleteuserok' => 'Usuario borrado correctamente',
     'advisedeleteuser' => '¿Estás seguro de que quieres borrar este usuario?',
