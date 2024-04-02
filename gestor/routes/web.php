@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Message;
+use App\Models\Link;
 use App\Http\Controllers\LanguageController;
 use Gwannon\PHPActiveCampaignAPI\curlAC;
 
@@ -19,12 +20,14 @@ use Gwannon\PHPActiveCampaignAPI\curlAC;
 |
 */
 
-define('PERMS', "boletin-basquetrade,boletin-bdih-activos,boletines-spri,info-campanas,info-adimedia,admin-usuarios,otros-paneles");
+define('PERMS', "boletin-basquetrade,boletin-bdih-activos,boletines-spri,info-campanas,info-adimedia,admin-usuarios,admin-otros-paneles,otros-paneles");
 
 Route::get('lang/{lang}', [LanguageController::class, 'swap'])->name('lang.swap');
 Route::group(['middleware' => 'auth'], function() {
     Route::get('/home', function () {
-        return view('home');
+        $links = Link::orderBy('title', 'asc')->get();
+        return view('home', 
+        ['links' => $links]);
     })->name('home');
 
     //Paneles de información
@@ -506,6 +509,40 @@ Route::group(['middleware' => 'auth'], function() {
             'perms' => $perms
         ]);
     })->name('admin.usuarios');
+
+
+
+    Route::get('/admin/otrospaneles/borrar/{id}', function ($id) {
+        //if(Auth::user()->superadmin != 1) return redirect('/home');
+        if($res=Link::where('id',$id)->delete()) return redirect(route('admin.otrospaneles', ['delete' => 'ok']).'#links');
+        else return redirect(route('admin.otrospaneles', ['delete' => 'error']).'#links');
+    })->name('admin.otrospaneles.borrar');
+
+    Route::post('/admin/otrospaneles', function (Request $request) {
+        //if(Auth::user()->superadmin != 1) return redirect('/home');
+        $link_created = false;
+        $links = Link::where('url', $request->input('linkurl'))->get();
+        if(sizeof($links) == 0){
+            $dataLink = new Link();
+            $dataLink->title = $request->input('linktitle');
+            $dataLink->url = $request->input('linkurl');
+            $dataLink->save();
+            $link_created = true;
+        }
+        $links = Link::orderBy('title', 'asc')->get();
+        return view('admin_links', [
+            'link_created' => $link_created,
+            'links' => $links
+        ]);
+    })->name('admin.otrospaneles.crear');
+
+    Route::get('/admin/otrospaneles', function (Request $request) {
+        //if(Auth::user()->superadmin != 1) return redirect('/home');
+        $links = Link::orderBy('title', 'asc')->get();
+        return view('admin_links', [
+            'links' => $links
+        ]);
+    })->name('admin.otrospaneles');
 
     Route::get('/change-password', [App\Http\Controllers\HomeController::class, 'changePassword'])->name('change-password');
     Route::post('/change-password', [App\Http\Controllers\HomeController::class, 'updatePassword'])->name('update-password');

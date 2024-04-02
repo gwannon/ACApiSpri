@@ -42,6 +42,7 @@ return [
     'createuser' => 'Crear usuarios',
 
     'adminusers' => 'Administrar usuarios',
+    'adminotrospaneles' => 'Administrar enlaces de Otros paneles',
     'registeredusers' => 'Usuarios registrados',
     'user' => 'Usuario',
     'actions' => 'Acciones',
@@ -52,7 +53,9 @@ return [
     'edituserok' => 'Usuario editado correctamente',
     'createuserok' => 'Usuario creado correctamente',
     'deleteuserok' => 'Usuario borrado correctamente',
+
     'advisedeleteuser' => '¿Estás seguro de que quieres borrar este usuario?',
+    'advisedeletelink' => '¿Estás seguro de que quieres borrar este enlace?',
     'filltochange' => 'Rellenar solo si se desea cambiar',
     
 
@@ -75,14 +78,6 @@ return [
     'salir' => 'Salir',
     'back' => 'Volver',
 
-
-
-    'otherpanels1' => 'Descarga de Documentos en SPRI y BTI',
-    'otherpanels2' => 'Informes data studio',
-    'otherpanels3' => 'Calendario editorial Grupo SPRI',
-    'otherpanels4' => 'Seguimiento tareas',
-
-
     //Permisos
     'perm_boletin-basquetrade' => 'Boletín BEEN Comercial',
     'perm_boletin-bdih-activos' => 'Boletín Activos BDIH',
@@ -91,4 +86,16 @@ return [
     'perm_info-adimedia' => 'Paneles de información para ADIMEDIA',
     'perm_admin-usuarios' => 'Administración de usuarios',
     'perm_otros-paneles' => 'Otros paneles',
+    'perm_admin-otros-paneles' => 'Administración de otros paneles',
+
+
+    'otrospaneleslinks' => 'Enlaces a Otros paneles',
+    'nolinks' => 'No hay links',
+    'title' => 'Título',
+    'url' => 'URL',
+    'createlink' => 'Crear enlaces',
+
+    'linkexists' => 'Esta URL ya existe',
+    'createlinkok' => 'Enlace creado correctamente',
+    'deletelinkok' => 'Enlace borrado correctamente',
 ];

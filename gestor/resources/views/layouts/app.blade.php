@@ -95,6 +95,7 @@
         };
 
         jQuery('.delete_user').confirm_action('{!! trans('messages.advisedeleteuser') !!}');
+        jQuery('.delete_link').confirm_action('{!! trans('messages.advisedeletelink') !!}');
     </script>
     @yield('footer')
 </body>

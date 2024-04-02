@@ -24,7 +24,7 @@
                 </thead>
                 <tbody>
                     @foreach ($users as $user)
-                        <tr {{ ($user['withdrawn'] === 1 ? " class=withdrawned" : "") }}>
+                        <tr>
                             <th class="align-middle" scope="row">{{ $user['name'] }}</th>
                             <td class="align-middle"><a href="mailto:{{ $user['email'] }}">{{ $user['email'] }}</a></td>
                             <td class="align-middle">
