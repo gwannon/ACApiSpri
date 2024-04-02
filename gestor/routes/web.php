@@ -19,6 +19,8 @@ use Gwannon\PHPActiveCampaignAPI\curlAC;
 |
 */
 
+define('PERMS', "boletin-basquetrade,boletin-bdih-activos,boletines-spri,info-campanas,info-adimedia,admin-usuarios,otros-paneles");
+
 Route::get('lang/{lang}', [LanguageController::class, 'swap'])->name('lang.swap');
 Route::group(['middleware' => 'auth'], function() {
     Route::get('/home', function () {
@@ -453,7 +455,7 @@ Route::group(['middleware' => 'auth'], function() {
         User::where('id', $id)->update([ 
             'name' => $request->input('username'),
             'email' => $request->input('useremail'),
-            'perms' => $request->input('userperms'),
+            'perms' => implode(",", $request->input('userperms')),
         ]);
         if($request->input('userpassword') != '' && strlen($request->input('userpassword')) >= 8 ) {
             User::where('id', $id)->update([
@@ -465,14 +467,17 @@ Route::group(['middleware' => 'auth'], function() {
 
     Route::get('/admin/usuarios/editar/{id}', function ($id) {
         //if(Auth::user()->superadmin != 1) return redirect('/');
+        $perms = explode(",", PERMS);
         $user = User::where('id', $id)->first();
         return view('admin_user_edit', [
-            'user' => $user
+            'user' => $user,
+            'perms' => $perms
         ]);
     })->name('admin.usuarios.editar');
 
     Route::post('/admin/usuarios', function (Request $request) {
         //if(Auth::user()->superadmin != 1) return redirect('/home');
+        $perms = explode(",", PERMS);
         $user_created = false;
         $users = User::where('email', $request->input('useremail'))->get();
         if(sizeof($users) == 0){
@@ -480,22 +485,25 @@ Route::group(['middleware' => 'auth'], function() {
             $dataUser->name = $request->input('username');
             $dataUser->password = Hash::make($request->input('userpassword'));
             $dataUser->email = $request->input('useremail');
-            $dataUser->perms = $request->input('userperms');
+            $dataUser->perms = implode(",", $request->input('userperms'));
             $dataUser->save();
             $user_created = true;
         }
         $users = User::orderBy('name', 'asc')->get();
         return view('admin_users', [
             'user_created' => $user_created,
-            'users' => $users
+            'users' => $users,
+            'perms' => $perms
         ]);
     })->name('admin.usuarios.crear');
 
     Route::get('/admin/usuarios', function (Request $request) {
+        $perms = explode(",", PERMS);
         //if(Auth::user()->superadmin != 1) return redirect('/home');
         $users = User::orderBy('name', 'asc')->get();
         return view('admin_users', [
-            'users' => $users
+            'users' => $users,
+            'perms' => $perms
         ]);
     })->name('admin.usuarios');
 

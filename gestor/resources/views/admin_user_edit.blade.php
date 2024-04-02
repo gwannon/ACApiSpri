@@ -25,8 +25,19 @@
               <input type="password" class="form-control" id="inputLastName" minlength="8" autocomplete="false" name="userpassword" minlength="8" placeholder="{{ trans('messages.filltochange') }}" value="">
           </div>
           <div class="col-md-6 form-group">
-              <label for="inputPerms">{!! trans('messages.perms') !!} *</label>
-              <input type="text" class="form-control" id="inputPerms" name="userperms" value="{{ $user['perms'] }}" required>
+          {!! trans('messages.perms') !!} *<br/>
+                @foreach ($perms as $perm)
+                    <label>
+                        @if (preg_match('/'.$perm.'/', $user['perms']))
+                        <input type="checkbox" class="permcheckboxes" id="inputPerms{{ $perm }}" name="userperms[]" 
+                            value="{{ $perm }}" checked="checked" required>
+                        @else
+                        <input type="checkbox" class="permcheckboxes" id="inputPerms{{ $perm }}" name="userperms[]" 
+                            value="{{ $perm }}" required>
+                        @endif    
+                        {!! trans('messages.perm_'.$perm) !!}
+                    </label><br/>
+                @endforeach 
           </div>
       </div>
       <input type="submit" value="{!! trans('messages.edit') !!}" class="btn btn-primary mb-2">

@@ -27,7 +27,11 @@
                         <tr {{ ($user['withdrawn'] === 1 ? " class=withdrawned" : "") }}>
                             <th class="align-middle" scope="row">{{ $user['name'] }}</th>
                             <td class="align-middle"><a href="mailto:{{ $user['email'] }}">{{ $user['email'] }}</a></td>
-                            <td class="align-middle">{{ $user['perms'] }}</td>
+                            <td class="align-middle">
+                                @foreach (explode(",", $user['perms']) as $perm)    
+                                <span class="alert alert-info p-1">{!! trans('messages.perm_'.$perm) !!}</span>
+                                @endforeach
+                            </td>
                             <td class="align-middle">
                                 <a class="btn btn-danger btn-sm delete_user" href="{{ route('admin.usuarios.borrar', $user['id']) }}">{!! trans('messages.delete') !!}</a>
                                 <a class="btn btn-success btn-sm" href="{{ route('admin.usuarios.editar', $user['id']) }}">{!! trans('messages.edit') !!}</a>
@@ -66,8 +70,13 @@
                 <input type="password" class="form-control" id="inputPassword" minlength="8" autocomplete="false" name="userpassword" value="" required>
             </div>
             <div class="col-md-6 form-group">
-                <label for="inputPerms">{!! trans('messages.perms') !!} *</label>
-                <input type="text" class="form-control" id="inputPerms" name="userperms" value="" required>
+                {!! trans('messages.perms') !!} *<br/>
+                @foreach ($perms as $perm)
+                    <label>
+                        <input type="checkbox" class="permcheckboxes" id="inputPerms{{ $perm }}" name="userperms[]" 
+                            value="{{ $perm }}" required> {!! trans('messages.perm_'.$perm) !!}
+                    </label><br/>
+                @endforeach 
             </div>
         </div>
         <input type="submit" value="{!! trans('messages.createuser') !!}" class="btn btn-primary mb-2">

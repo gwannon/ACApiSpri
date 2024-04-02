@@ -81,4 +81,14 @@ return [
     'otherpanels2' => 'Informes data studio',
     'otherpanels3' => 'Calendario editorial Grupo SPRI',
     'otherpanels4' => 'Seguimiento tareas',
+
+
+    //Permisos
+    'perm_boletin-basquetrade' => 'Boletín BEEN Comercial',
+    'perm_boletin-bdih-activos' => 'Boletín Activos BDIH',
+    'perm_boletines-spri' => 'Boletines Grupo SPRI',
+    'perm_info-campanas' => 'Paneles de información',
+    'perm_info-adimedia' => 'Paneles de información para ADIMEDIA',
+    'perm_admin-usuarios' => 'Administración de usuarios',
+    'perm_otros-paneles' => 'Otros paneles',
 ];
