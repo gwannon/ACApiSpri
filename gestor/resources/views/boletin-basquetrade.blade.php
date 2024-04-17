@@ -157,7 +157,9 @@
         $("div").not(this).removeClass("focus");
         var append = "<div id='item-"+item+"' data-type='item' class='focus col-12 bg-success p-2 mb-2 pe-5' tabindex='0'>"+
             "<input type='text' placeholder='Título' class='form-control form-control-sm mb-1' value=''>"+
-            "<input type='text' placeholder='Subtítulo' class='form-control form-control-sm mb-1' value=''>"+
+            "<input type='text' placeholder='Subtítulo 1 - fecha y lugar' class='form-control form-control-sm mb-1' value=''>"+
+            "<input type='text' placeholder='Subtítulo 2 - tipo de evento presencial, híbrido u online' class='form-control form-control-sm mb-1' value=''>"+
+            "<input type='text' placeholder='Subtítulo 3 - sectores o ámbitos de interés' class='form-control form-control-sm mb-1' value=''>"+
             "<input type='url' placeholder='URL' class='form-control form-control-sm mb-1' value=''>"+
             "<textarea placeholder='Descripción' class='form-control'></textarea>"+
             "<select class='form-select form-select-sm'><option value='efefed'>Gris</option><option value='ffffff'>Blanco</option></select>"+
@@ -218,7 +220,7 @@
         var append = "<div id='item-"+item+"' data-type='title' class='focus col-12 bg-info p-2 mb-2 pe-5'>"+
             "<b>TITULAR</b> "+
             "<select class='form-select form-select-sm'>"+
-            "<option value='1'>PROYECTOS</option>"+
+            "<option value='1'>OPORTUNIDADES</option>"+
             "<option value='2'>EVENTOS</option>"+
             "</select>"+
             "<i>&#x2715;</i>"+

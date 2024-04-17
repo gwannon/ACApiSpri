@@ -71,18 +71,34 @@ Route::post('/boletines/been-basquetrade/ajax/', function (Request $request) {
                     if($currenttitle == 2)  $temp = File::get(resource_path() . "/mail-templates/basquetrade/event.html");
                     else $temp = File::get(resource_path() . "/mail-templates/basquetrade/item.html");
                     $temp = str_replace('[title]', $item['value'][0], $temp);
-                    $temp = str_replace('[url]', $item['value'][2], $temp);
-                    $temp = str_replace('[description]', $item['value'][3], $temp);
+                    $temp = str_replace('[url]', $item['value'][4], $temp);
+                    $temp = str_replace('[description]', $item['value'][5], $temp);
                     if($item['value'][1] != '') {
-                        $temp = str_replace('[has_subtitle]', "", $temp);
-                        $temp = str_replace('[/has_subtitle]', "", $temp);
-                        $temp = str_replace('[subtitle]', $item['value'][1], $temp);
+                      $temp = str_replace('[has_subtitle1]', "", $temp);
+                      $temp = str_replace('[/has_subtitle1]', "", $temp);
+                      $temp = str_replace('[subtitle1]', $item['value'][1], $temp);
                     } else {
-                        $temp = str_replace('[has_subtitle]', "<!-- ", $temp);
-                        $temp = str_replace('[/has_subtitle]', " -->", $temp);
+                      $temp = str_replace('[has_subtitle1]', "<!-- ", $temp);
+                      $temp = str_replace('[/has_subtitle1]', " -->", $temp);
                     }
-                    $temp = str_replace('[color]', $item['value'][4], $temp);
-                    $currentcolor = $item['value'][4];
+                    if($item['value'][2] != '') {
+                      $temp = str_replace('[has_subtitle2]', "", $temp);
+                      $temp = str_replace('[/has_subtitle2]', "", $temp);
+                      $temp = str_replace('[subtitle2]', $item['value'][2], $temp);
+                    } else {
+                      $temp = str_replace('[has_subtitle2]', "<!-- ", $temp);
+                      $temp = str_replace('[/has_subtitle2]', " -->", $temp);
+                    }
+                    if($item['value'][3] != '') {
+                      $temp = str_replace('[has_subtitle3]', "", $temp);
+                      $temp = str_replace('[/has_subtitle3]', "", $temp);
+                      $temp = str_replace('[subtitle3]', $item['value'][3], $temp);
+                    } else {
+                      $temp = str_replace('[has_subtitle3]', "<!-- ", $temp);
+                      $temp = str_replace('[/has_subtitle3]', " -->", $temp);
+                    }
+                    $temp = str_replace('[color]', $item['value'][6], $temp);
+                    $currentcolor = $item['value'][6];
                     $innerhtml .= $temp;
                 }
             }
@@ -127,8 +143,8 @@ Route::post('/boletines/been-basquetrade/ajax/', function (Request $request) {
             }
             if(!isset($json['status'])) $json = ['status' => 'success', 'text' => 'Newsletter enviada correctamente a: '.$_POST['email']];
         }
-   } else if(isset($_POST['action']) && $_POST['action'] == 'save' && isset($_POST['form'])) {
-        File::put(storage_path()."/saves/basquetrade/".(isset($_POST['namesave']) && $_POST['namesave'] != '' ? $_POST['namesave'] : 'Guardado').".json", json_encode($_POST['form']));
+   } else if(isset($request->action) && $request->action == 'save' && isset($request->form)) {
+        File::put(storage_path()."/saves/basquetrade/".(isset($request->namesave) && $request->namesave != '' ? str_replace(["/"], "-", $request->namesave) : 'Guardado').".json", json_encode($_POST['form']));
         if(!isset($json['status'])) $json = ['status' => 'success', 'text' => 'Newsletter guardada correctamente.'];
    }
    return $json;
@@ -287,7 +303,7 @@ Route::post('/boletines/bdih-activos/ajax/', function (Request $request) {
             if(!isset($json['status'])) $json = ['status' => 'success', 'text' => 'Newsletter enviada correctamente: '.$_POST['email']];
         }
     } else if(isset($request->action) && $request->action == 'save' && isset($request->form)) {
-        File::put(storage_path()."/saves/bdih-activos/".(isset($request->namesave) && $request->namesave != '' ? $request->namesave : 'Guardado').".json", json_encode($request->form));
+        File::put(storage_path()."/saves/bdih-activos/".(isset($request->namesave) && $request->namesave != '' ? str_replace(["/"], "-", $request->namesave) : 'Guardado').".json", json_encode($request->form));
         if(!isset($json['status'])) $json = ['status' => 'success', 'text' => 'Newsletter guardada correctamente.'];
     }
     return $json;
