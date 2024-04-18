@@ -404,7 +404,8 @@ Route::get('/info/ajax/', function (Request $request) {
             "linkclicks" => $campaign->linkclicks,
             "unsubscribes" => $campaign->unsubscribes,
             "image" => $image,
-            "segment_name" => $campaign->segmentname
+            "segment_name" => $campaign->segmentname,
+            "hash" => md5($campaign->name)
           ];
     }
     if (count($items) == 0) return [];

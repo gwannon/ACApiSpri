@@ -9,7 +9,7 @@
       <table class="table table-striped">
         <thead class="table-dark">
           <tr>
-            <th colspan="11">
+            <th colspan="12">
               <form id="search" class="row m-0">
                 <div class="col-auto"><input class="form-control" type="text" name="search" value="" /></div>
                 <div class="col-auto"><button class="btn btn-secondary">Buscar</button></div>
@@ -29,6 +29,7 @@
             <th scope="col">Porcentaje de clicks únicos</th>
             <th scope="col">Clicks totales</th>
             <th scope="col">Bajas</th>
+            <th scope="col">Archivo</th>            
           </tr>
         </thead>
         <tbody></tbody>
@@ -84,6 +85,7 @@ function generateTable(json) {
         (data.type == 'split' && data.testab ? "<br/><small>A: "+data.testab[0].linkclicks+"<br/>B: "+data.testab[1].linkclicks : "")+"</td>"+
       "<td>"+data.unsubscribes+
         (data.type == 'split' && data.testab ? "<br/><small>A: "+data.testab[0].unsubscribes+"<br/>B: "+data.testab[1].unsubscribes : "")+"</td>"+
+      "<td><a href='https://www.spri.eus/es/archivo-boletines/?wpatg_preview_newsletter="+data.hash+"' target='_blank'>+</a></td>"+
     "</tr>")
   });
 }
