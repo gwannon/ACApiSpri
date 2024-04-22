@@ -121,10 +121,9 @@ Route::group(['middleware' => 'auth'], function() {
         $data = [];
         $offset = 0;
         $max = 100;
-        $automs_api = curlAC::curlCall("/automations?orders[name]=DESC&offset=".$offset."&limit=".$max)->automations; 
+        $automs_api = curlAC::curlCall("/automations?orders[name]=ASC&offset=".$offset."&limit=".$max)->automations; 
         while(count($automs_api) > 0) { 
-            $offset = $offset + $max;
-            $automs_api = curlAC::curlCall("/automations?orders[name]=DESC&offset=".$offset."&limit=".$max)->automations; 
+            
             foreach ($automs_api as $current_autom) {
                 $data[$current_autom->id] = [
                     "name" => $current_autom->name,
@@ -134,6 +133,8 @@ Route::group(['middleware' => 'auth'], function() {
                     "status" => $current_autom->status,
                 ];
             } //if ($offset > 500) break;
+            $offset = $offset + $max;
+            $automs_api = curlAC::curlCall("/automations?orders[name]=ASC&offset=".$offset."&limit=".$max)->automations; 
         }
         return view('info-automatizaciones-todas', ["data" => $data]);
     })->name('info.automatizaciones-todas');
