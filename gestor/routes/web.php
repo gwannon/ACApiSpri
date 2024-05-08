@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Message;
+use App\Models\Statistic;
 use App\Models\Link;
 use App\Http\Controllers\LanguageController;
 use Gwannon\PHPActiveCampaignAPI\curlAC;
@@ -331,12 +332,24 @@ Route::group(['middleware' => 'auth'], function() {
         $data = [];
         $counter = 0;
         while ($counter < $days) {
-            $enddate = date("Y-m-d", strtotime("-".$counter." days"));
-            $counter ++;
-            $startdate = date("Y-m-d", strtotime("-".$counter." days"));
-            $result = curlAC::curlCall("/contacts?filters[created_before]=".$enddate."&filters[created_after]=".$startdate)->meta->total;
-            $label = date("m/d", strtotime("-".$counter." days"));
-            $data[$label] =  $result;
+            $statistic = Statistic::where('date', date("Y-m-d", strtotime("-".($counter+1)." days"))." 00:00:00")->first();
+            if(isset($statistic->id) && $statistic->id > 0) {
+                $counter ++;
+                $label = date("m/d", strtotime("-".$counter." days"));
+                $data[$label] =  $statistic->new_users;
+            } else {
+                $enddate = date("Y-m-d", strtotime("-".$counter." days"));
+                $counter ++;
+                $startdate = date("Y-m-d", strtotime("-".$counter." days"));
+                $result = curlAC::curlCall("/contacts?filters[created_before]=".$enddate."&filters[created_after]=".$startdate)->meta->total;
+                $label = date("m/d", strtotime("-".$counter." days"));
+                $data[$label] =  $result;
+                //Guardamos en base de datos el dato
+                $statistic = new Statistic();
+                $statistic->date = date("Y-m-d", strtotime("-".$counter." days"));
+                $statistic->new_users =  $result;
+                $statistic->save();
+            }
         }
         $data = array_reverse($data);
         return view('info-usuarios', ["data" => $data, "days" => $days]);
